@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="btn-group">
+  <a class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" href="#">
+    <i class="fab fa-product-hunt"></i> 分页条数 <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+    {% for paginator in paginator_list %}
+      <li><a href="?list_per_page={{ paginator }}">{{ paginator }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
