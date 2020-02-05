@@ -1,0 +1,16 @@
+.tab-content {
+    margin-top:20px;
+}
+
+#user_perm th,td {
+    text-align: center;
+}
+
+#group_perm th,td {
+    text-align: center;
+}
+
+.guardiany-input-form .input-group {
+    width: 220px;
+}
+
