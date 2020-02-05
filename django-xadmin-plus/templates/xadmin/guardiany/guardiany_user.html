@@ -1,0 +1,68 @@
+{% extends 'xadmin/base_site.html' %}
+{% load i18n %}
+{% load admin_urls %}
+{% load xadmin_tags %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
+        <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+        <li>
+            {% if has_change_permission %}
+            <a href="{{ change_url }}">{{ original|truncatewords:"18" }}</a>
+            {% else %}
+            {{ original|truncatewords:"18" }}
+            {% endif %}
+        </li>
+        <li>
+            {% if has_change_permission %}
+            <a href="{{ guardiany_url }}">对象权限</a>
+            {% else %}
+            对象权限
+            {% endif %}
+        </li>
+        <li class="active">管理用户：{{ base_obj }}</li>
+    </ul>
+{% endblock %}
+
+{% block nav_title %}
+    <i class="fas fa-shield-alt"><sub class="fas fa-pencil-alt"></sub></i> {{ title }}
+{% endblock %}
+
+{% block content %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <fieldset class="module aligned">
+            <div class="form-row">
+                <label>{% trans "original" %}</label>{{ original }}
+            </div>
+            <div class="form-row">
+                <label>{% trans "user" %}</label>{{ base_obj }}
+            </div>
+            <div class="form-row group_permissions">
+                {{ form }}
+            </div>
+        </fieldset>
+        <div class="form-actions well well-sm clearfix">
+            <button type="submit" class="default btn btn-primary hide-sm" name="_save" data-loading-text="{% trans "Saving.." %}">
+                <i class="fas fa-save"></i> {% trans 'Save' %}
+            </button>
+        </div>
+    </form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

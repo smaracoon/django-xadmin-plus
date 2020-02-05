@@ -1,0 +1,142 @@
+{% extends 'xadmin/base_site.html' %}
+{% load i18n %}
+{% load admin_urls %}
+{% load xadmin_tags %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'xadmin:index' %}">{% trans 'Home' %}</a></li>
+        <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+        <li>
+            {% if has_change_permission %}
+                <a href="{{ change_url }}">{{ original|truncatewords:"18" }}</a>
+            {% else %}
+                {{ original|truncatewords:"18" }}
+            {% endif %}
+        </li>
+        <li class="active">对象权限</li>
+    </ul>
+{% endblock %}
+
+{% block nav_title %}
+    <i class="fas fa-shield-alt"></i> 对象权限
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs" id="guardiany_perm_tab">
+        <li class="active"><a href="#user_perm">用户权限</a></li>
+        <li><a href="#group_perm">群组权限</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="user_perm">
+            <form action="." method="post" class="guardiany-input-form well well-sm clearfix">
+                {% csrf_token %}
+                <div class="input-group form-actions">
+                    <input type="text" class="form-control" name="username" placeholder="输入用户名">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary" name="submit_manage_user">
+                            <i class="fas fa-user-plus"></i>添加用户
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>用户</th>
+                        {% for perm in model_perms %}
+                        <th>{{ perm.name }}</th>
+                        {% endfor %}
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user,user_perms in users_perms.items %}
+                    <tr>
+                        <td>{{ user }}</td>
+                        {% for perm in model_perms %}
+                        <td>
+                            {% if perm.codename in user_perms %}
+                            {% include "admin/guardian/model/obj_perms_yes.html" %}
+                            {% else %}
+                            {% include "admin/guardian/model/obj_perms_no.html" %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td>
+                            {% if has_change_guardiany %}
+                            <a href="user-manage/{{ user.id|safe }}">修改</a>
+                            {% else %}
+                            修改
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="group_perm">
+            <form action="." method="post" class="guardiany-input-form well well-sm clearfix">
+                {% csrf_token %}
+                <div class="input-group form-actions">
+                    <input type="text" class="form-control" name="groupname" placeholder="输入群组名">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary" name="submit_manage_group">
+                            <i class="fas fa-user-plus"></i>添加群组
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>群组</th>
+                        {% for perm in model_perms %}
+                        <th>{{ perm.name }}</th>
+                        {% endfor %}
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group,group_perms in groups_perms.items %}
+                    <tr>
+                        <td>{{ group }}</td>
+                        {% for perm in model_perms %}
+                        <td>
+                            {% if perm.codename in group_perms %}
+                            {% include "admin/guardian/model/obj_perms_yes.html" %}
+                            {% else %}
+                            {% include "admin/guardian/model/obj_perms_no.html" %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td>
+                            {% if has_change_guardiany %}
+                            <a href="group-manage/{{ group.id|safe }}">修改</a>
+                            {% else %}
+                            修改
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('#guardiany_perm_tab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
